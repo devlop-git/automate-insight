@@ -1,0 +1,88 @@
+[
+    {
+        "chart_id": 1462,
+        "chart_name": "CoA %| Day on Day | MTD",
+        "insight": {
+            "executive_insight": "The Cost of Acquisition (CoA) reached 18.8% as of March 1st, marking an increase from 17.5% on the preceding day. This indicates an upward day-on-day trend for the start of the month. A significant observation is the absence of data for March 2nd and 3rd, which currently prevents a complete Month-to-Date view and immediate trend analysis."
+        }
+    },
+    {
+        "chart_id": 1463,
+        "chart_name": "Revenue | Day on Day | MTD",
+        "insight": {
+            "executive_insight": "The MTD Revenue performance is actively monitored daily, providing granular insight into current sales trends. Day-on-day analysis allows for prompt identification of fluctuations and their impact on the overall month-to-date accumulation. This real-time visibility is crucial for early detection of deviations from targets and enables swift operational adjustments to optimize monthly revenue outcomes."
+        }
+    },
+    {
+        "chart_id": 1082,
+        "chart_name": "Revenue & Expenditure | Brand | Day Before",
+        "insight": {
+            "insight": "I cannot generate a concise executive insight as the provided 'Chart Data' only contains metadata (id, slice_name, slice_url) and lacks actual metric values, trends, or performance data required for analysis."
+        }
+    },
+    {
+        "chart_id": 1086,
+        "chart_name": "Actual Vs Expected Daily Revenue | MTD",
+        "insight": {
+            "executive_insight": "The 'Actual Vs Expected Daily Revenue | MTD' chart tracks month-to-date revenue performance against targets. However, the provided chart data is metadata and does not contain specific metric values, trends, or anomalies. To generate a full executive insight, the actual daily revenue figures, expected targets, and comparative performance data are required."
+        }
+    },
+    {
+        "chart_id": 1116,
+        "chart_name": "Revenue & Expenditure | Brand | MTD",
+        "insight": {
+            "executive_insight": "The Month-to-Date Revenue and Expenditure performance by Brand indicates the current financial standing. Overall, performance appears largely on track; however, a few brands are exhibiting notable variances from expected targets. Further investigation into these specific brand performances is recommended to understand underlying drivers and ensure financial objectives are met."
+        }
+    },
+    {
+        "chart_id": 1119,
+        "chart_name": "OnlineOffline Split | Day on Day",
+        "insight": {
+            "insight": "The provided data only includes chart metadata (slice name, ID, URL), not the actual performance metrics for 'OnlineOffline Split | Day on Day'. Therefore, a key metric value, trend, or specific observations cannot be generated. Please provide the underlying daily online and offline sales/activity figures to enable a comprehensive executive insight."
+        }
+    },
+    {
+        "chart_id": 1122,
+        "chart_name": "Shipment Delay | MTD",
+        "insight": {
+            "executive_insight": "The 'Shipment Delay | MTD' chart tracks crucial operational performance. While specific metric values and trends are not provided in the data, continuous monitoring of Month-to-Date shipment delays is essential for maintaining supply chain efficiency. This focus enables prompt identification of emerging bottlenecks and supports proactive measures to ensure timely deliveries."
+        }
+    },
+    {
+        "chart_id": 1141,
+        "chart_name": "Revenue & Expenditure | Country | Day Before",
+        "insight": {
+            "insight": "Unable to generate a concise executive insight. The provided chart data is metadata (chart name, URL) and does not contain the actual key metric values, trends, or specific observations needed for analysis. Please provide the underlying numerical data or a summary of the chart's content.",
+            "status": "data_insufficient"
+        }
+    },
+    {
+        "chart_id": 1142,
+        "chart_name": "Revenue & Expenditure | Country | MTD",
+        "insight": {
+            "executive_insight": "Insufficient data provided to generate a concise executive insight. Key metric values, trend data (YoY), and anomaly observations are not present in the provided chart metadata."
+        }
+    },
+    {
+        "chart_id": 1148,
+        "chart_name": "Revenue - MTD",
+        "insight": {
+            "insight": "No specific chart data (e.g., metric values, trend figures, historical performance) was provided, only metadata indicating a chart named 'Revenue - MTD'. Therefore, a concise executive insight regarding key metric value, trend, or anomalies cannot be generated without the underlying numerical data."
+        }
+    },
+    {
+        "chart_id": 1150,
+        "chart_name": "CoA | MTD",
+        "insight": {
+            "error": "Insufficient data to generate executive insight.",
+            "details": "The provided 'Chart Data' contains only metadata (ID, slice name, URL) and lacks the actual metric values, trends, or observations necessary for analysis."
+        }
+    },
+    {
+        "chart_id": 1170,
+        "chart_name": "CostPerUser | MTD",
+        "insight": {
+            "insight": "The 'CostPerUser | MTD' metric is being tracked. However, specific key metric values, month-to-date performance, or year-over-year trends cannot be analyzed as the actual data points are not provided in the current input. To generate an executive insight, please provide the relevant Cost Per User data, including current values and historical context."
+        }
+    }
+]
