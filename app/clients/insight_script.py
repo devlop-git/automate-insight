@@ -15,39 +15,57 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 def generate_insight_with_gemini(chart):
     """
-    Send chart data to Gemini Flash and get business insight.
+    Send chart data to Gemini and generate business insight
+    with confidence score and usage metadata.
     """
+
     prompt = f"""
-    You are a business analyst.
+You are a senior business analyst.
 
-    Generate a concise executive insight for the following chart data.
-    Include:
-    - Key metric value
-    - Trend (YoY if available)
-    - Any anomaly or observation
-    - Keep it professional and short (3-4 sentences max)
+Analyze the chart data and generate a concise executive insight.
 
-    Chart Data:
-    {json.dumps(chart, indent=2)}
-    """
+Return JSON in this format:
+
+{{
+  "insight_text": "short executive summary",
+  "trend": "increasing | decreasing | stable | unknown",
+  "confidence_score": 0-1,
+  "anomaly_detected": true/false
+}}
+
+Rules:
+- Maximum 3–4 sentences
+- Mention key metric values if present
+- Mention trend if visible
+- Highlight anomalies if any
+
+Chart Data:
+{json.dumps(chart, indent=2)}
+"""
 
     response = model.generate_content(
         prompt, generation_config={"response_mime_type": "application/json"}
     )
 
+    # Parse model output
     try:
-        parsed = json.loads(response.text)
+        insight_data = json.loads(response.text.strip())
+        usage_metadata = {
+            "prompt_tokens": response.usage_metadata.prompt_token_count,
+            "completion_tokens": response.usage_metadata.candidates_token_count,
+            "total_tokens": response.usage_metadata.total_token_count,
+        }
     except Exception:
-        parsed = {
-            "summary": response.text.strip(),
-            "trend": "unknown",
-            "confidence": "low",
+        return {
+            "insight_text": response.text.strip(),
+            "confidence_score": 0.3,
         }
 
     return {
-        "chart_id": chart.get("id"),
-        "chart_name": chart.get("slice_name"),
-        "insight": parsed,
+        "chart_id": chart.get("chart_id"),
+        "insight_text": insight_data.get("insight_text"),
+        "confidence_score": insight_data.get("confidence_score"),
+        "usage_metadata": usage_metadata,
     }
 
 
@@ -61,6 +79,7 @@ def generate_all_insights(charts):
 
     return results
 
+
 def parse_llm_response(response_text):
     # remove ```json ``` wrappers
     cleaned = re.sub(r"```json|```", "", response_text).strip()
@@ -68,9 +87,10 @@ def parse_llm_response(response_text):
     # convert string to dict
     return json.loads(cleaned)
 
-def bulid_dashboard_insight(charts):
+
+def build_dashboard_insight(charts):
     chart_text = "\n\n".join(
-        f"{i+1}. Chart: {c['chart_name']}\nInsight: {c['insight']['executive_insight']}"
+        f"{i+1}. Chart: {c['chart_name']}\nInsight: {c['insight_text']}"
         for i, c in enumerate(charts)
     )
 
@@ -103,5 +123,10 @@ JSON Structure:
     response = model.generate_content(prompt)
 
     parsed_result = parse_llm_response(response.text)
+    usage_metadata = {
+        "prompt_tokens": response.usage_metadata.prompt_token_count,
+        "completion_tokens": response.usage_metadata.candidates_token_count,
+        "total_tokens": response.usage_metadata.total_token_count,
+    }
 
-    return parsed_result
+    return {"insight":parsed_result,"usage_metadata":usage_metadata}

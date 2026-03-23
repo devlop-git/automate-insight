@@ -1,12 +1,19 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.clients.superset_client import SupersetClient
-from app.clients.insight_script import bulid_dashboard_insight, generate_all_insights
+from app.clients.insight_script import build_dashboard_insight, generate_all_insights
+from app.models.dashboard import Dashboard
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+router_v1 = APIRouter()
 
 client = SupersetClient()
 
-@router.get("/dashboard/{id}")
+# @router.get("/check_connection")
+# def getDbConnection(db:Session = Depends(get_db)):
+#     # return db.query(Dashboard).all()
+#     return {"message": "DB Connected"}
+
+@router_v1.get("/dashboard_v1/{id}")
 def dashboard(id: int):
     chart_details = []
     charts = client.getChartList(id)
@@ -16,3 +23,47 @@ def dashboard(id: int):
         chart_details.append(client.chartDetails(sliceInfo, query_context))
     results = generate_all_insights(chart_details)
     return {"data": results}
+
+@router_v1.get("/dashboard/{dashboard_id}/insights")
+def get_dashboard_insights():
+    charts = [
+        {
+            "chart_id": 1462,
+            "chart_name": "CoA %| Day on Day | MTD",
+            "insight": {
+                "executive_insight": "The Cost of Acquisition (CoA) percentage shows an upward Day-on-Day trend, increasing from 17.6% to 19.1% over the initial observed period. A critical observation is the absence of CoA data for the last two recorded days, marked as null. This data gap requires immediate attention to ensure complete performance visibility."
+            },
+        },
+        {
+            "chart_id": 1463,
+            "chart_name": "Revenue | Day on Day | MTD",
+            "insight": {
+                "executive_insight": "Latest daily revenue reached $264,244, demonstrating a robust 31.3% increase year-over-year. However, a consecutive day-on-day decline in revenue has been observed within the current period, falling from an initial $330K to the current value. This recent downward trend warrants further investigation to understand contributing factors and potential impacts on overall Month-to-Date performance."
+            },
+        },
+        {
+            "chart_id": 1082,
+            "chart_name": "Revenue & Expenditure | Brand | Day Before",
+            "insight": {
+                "executive_insight": "Diamonds Factory led in revenue ($152K) and orders (162) for the period. Austen & Blake, despite lower overall volume ($112K revenue, 108 orders), demonstrated superior per-transaction profitability with a higher Average Order Value ($1,039) and a significantly better Expected Gross Margin (56.14% vs. 47.55%). Notably, SACET recorded no sales activity."
+            },
+        },
+        {
+            "chart_id": 1086,
+            "chart_name": "Actual Vs Expected Daily Revenue | MTD",
+            "insight": {
+                "executive_insight": "Daily revenue has shown a consistent downward trend over the past four days, with the most recent daily revenue recorded at $264,244. This represents a decline from an initial $329,996, indicating a significant drop in MTD performance. Crucially, the absence of expected revenue figures prevents a complete assessment of performance against set targets."
+            },
+        },
+        {
+            "chart_id": 1116,
+            "chart_name": "Revenue & Expenditure | Brand | MTD",
+            "insight": {
+                "executive_insight": "Month-to-date revenue for the analyzed brands totals approximately $1.2 million. Diamonds Factory leads performance with $682.4K in revenue from 698 orders, while Austen & Blake follows with $519.1K from 551 orders. A significant anomaly is SACET's exceptionally high Cost of Acquisition (CoA) at 76.4%, warranting immediate review given its minimal contribution of one order and $1K in revenue."
+            },
+        },
+    ]
+    
+    result = build_dashboard_insight(charts)
+    return result
+
