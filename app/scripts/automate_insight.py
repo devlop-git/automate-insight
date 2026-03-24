@@ -1,8 +1,11 @@
+import time
+
 from fastapi import Depends
 
 from app.clients.superset_client import SupersetClient
 from app.dependencies.database import get_db
 from app.dependencies.superset import get_superset_client
+from app.models.dashboard import Dashboard
 from app.repository.chart_repository import ChartRepository
 from app.services.chart_service import ChartService
 from app.services.dashboard_service import DashboardService
@@ -13,9 +16,8 @@ dashboard_service = DashboardService()
 chartRepo = ChartRepository()
 
 
-def automate_insight(dashboard_id):
+def automate_insight(dashboard_id,db):
     
-    db = next(get_db())
     client = get_superset_client()
     
     # Import dashboard Info
@@ -28,14 +30,11 @@ def automate_insight(dashboard_id):
     
     # Import charts
     charts = client.getChartList(dashboard_id)
-    # for chart in charts:
-    chart_service.create_chart(db,chart)
+    chart_service.create_chart(db,charts)
         
     # Import charts insights
-    # charts = client.getChartList(dashboard_id)
-    for chart in charts:    
-        print(chart)
-        # chart_service.get_chart_by_id(db,chart["id"])
+    for chart in charts:   
+        start = time.time() 
         query_context = client.explore_v1(chart)
         update_data = {"query_context": query_context}
         chartRepo.update_query_context(db, chart_id=chart["chart_id"], data=update_data)
@@ -43,8 +42,24 @@ def automate_insight(dashboard_id):
         data = client.chartDetails_v1(chart)
         chart_service.generate_insights(db,data)
         
+        elapsed = time.time() - start
+        sleep_time = max(0, 35 - elapsed)
+
+        time.sleep(sleep_time)
+        
     # Generate Dashboard Insight
     chart_service.get_all_charts_insights(db,dashboard_id)
+    
+    if __name__ == "__main__":
+        
+        db = next(get_db())
+        dashboards = db.query(Dashboard).all()
+        
+        for dashboard in dashboards:
+            automate_insight(dashboard.dashboard_id,db)
+            sleep_time(1800)
+        
+        
         
     
         

@@ -1,14 +1,19 @@
 from app.models.chart import Chart
-
+from sqlalchemy.dialects.postgresql import insert
 
 class ChartRepository:
     
     def create_chart(self,db,charts ):
-        db_chart = [Chart(**chart) for chart in charts]
-        db.add_all(db_chart)
+        stmt = insert(Chart).values(charts)
+
+        stmt = stmt.on_conflict_do_nothing(
+            index_elements=["chart_id"]   # unique column
+        )
+
+        db.execute(stmt)
         db.commit()
-        return db_chart
-    
+
+        return charts
     def get_all_charts(self,db,dashboard_id):
         return db.query(Chart).filter(Chart.dashboard_id == dashboard_id).all()
     

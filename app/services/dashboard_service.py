@@ -6,7 +6,8 @@ class DashboardService:
         self.dashboardRepo = DashboardRepository()
         
     def create_dashboard(self,db,dashboard ):
-        return self.dashboardRepo.create_dashboard(db,dashboard)
+        # return self.dashboardRepo.create_dashboard(db,dashboard)
+        return self.dashboardRepo.create_all_dashboard(db,dashboard)
     
     def get_dashboards(self ):
         return self.dashboardRepo.get_dashboards()

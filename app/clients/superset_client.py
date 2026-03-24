@@ -13,7 +13,6 @@ class SupersetClient:
         if cls.__instance is None:
             cls._instance = super(SupersetClient, cls).__new__(cls)
             cls._instance.initialize()
-            print("SupersetClient instance created")
         return cls._instance
     
     def initialize(self):
@@ -29,7 +28,6 @@ class SupersetClient:
         )
         # self.login()
 
-     
     def login(self):
 
         login = self.session.post(
@@ -45,20 +43,11 @@ class SupersetClient:
         login.raise_for_status()
 
         access_token = login.json()["access_token"]
-        print("access_token",access_token)
-        # csrf = self.session.get(
-        #     f"{self.base_url}/security/csrf_token/",
-        #     headers={"Authorization": f"Bearer {access_token}"}
-        # )
-
-        # csrf_token = csrf.json()["result"]
-
+        
         self.session.headers.update({
-            "Authorization": f"Bearer {access_token}",
-            # "X-CSRFToken": csrf_token
+            "Authorization": f"Bearer {access_token}"
         })
 
-        print("Superset login successful")
         
     def getDashboardInfo(self,id):
         url = f"{self.base_url}/dashboard/{id}"
@@ -104,7 +93,6 @@ class SupersetClient:
         response.raise_for_status()
         result = response.json()["result"]
         query_context = result["slice"]["query_context"]
-        # print("query_contextssssssssss",query_context)
         return query_context
 
 
@@ -143,4 +131,18 @@ class SupersetClient:
         chart_detail['data'] = data
         
         return chart_detail
-
+    
+    
+    def getAllDashboards(self):
+        url = f"{self.base_url}/dashboard/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:0,page_size:25,select_columns:!(id,dashboard_title,published,url,slug,changed_by,changed_by.id,changed_by.first_name,changed_by.last_name,changed_on_delta_humanized,owners,owners.id,owners.first_name,owners.last_name,tags.id,tags.name,tags.type,status,certified_by,certification_details,changed_on))"
+        response = self.session.get(url)
+        response.raise_for_status()
+        data = response.json()["result"]
+        dashboardInfo = [
+            {
+                "dashboard_id": d["id"],
+                "name": d["dashboard_title"]
+            }
+            for d in data
+        ]
+        return dashboardInfo
